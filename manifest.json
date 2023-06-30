@@ -1,0 +1,12 @@
+{
+  "name": "My PWA",
+  "icons": [
+    {
+      "src": "icons/bear.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "display": "standalone",
+  "start_url": "https://localhost:8000/"
+}
