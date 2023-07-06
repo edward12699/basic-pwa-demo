@@ -25,7 +25,8 @@ const app = express();
 
 // 指定静态资源的根目录
 const staticRoot = path.join(__dirname, '/');
-
+// 获取传参中间件
+app.use(express.json());
 // 配置静态资源中间件
 app.use(express.static(staticRoot));
 app.get("/vapidPublicKey", function (req, res) {
@@ -45,6 +46,7 @@ app.post("/sendNotification", function (req, res) {
   };
 
   setTimeout(function () {
+    console.log('success inter')
     webPush
       .sendNotification(subscription, payload, options)
       .then(function () {
