@@ -37,3 +37,11 @@ self.addEventListener('push', function (event) {
     })
   );
 });
+
+self.addEventListener('notificationclick', function (event) {
+  event.notification.close();
+  event.waitUntil(
+    //clients.openWindow 只能在用户交互的结果下调用，比如在 'notificationclick' 或者 'push' 事件处理程序中。如果在没有用户交互的情况下调用，它将不会有任何效果。
+    clients.openWindow("https://localhost:8000/")
+  );
+});
