@@ -2,6 +2,23 @@ const express = require('express');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const webPush = require("web-push");
+require('dotenv').config();
+
+
+// create server key pairs
+if (!process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
+  console.log(
+    "You must set the VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY " +
+    "environment variables. You can use the following ones:"
+  );
+  console.log(webPush.generateVAPIDKeys());
+}
+webPush.setVapidDetails(
+  "https://localhost:8000/",
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY
+);
 
 // 创建 Express 应用程序
 const app = express();
@@ -11,6 +28,35 @@ const staticRoot = path.join(__dirname, '/');
 
 // 配置静态资源中间件
 app.use(express.static(staticRoot));
+app.get("/vapidPublicKey", function (req, res) {
+  res.send(process.env.VAPID_PUBLIC_KEY);
+});
+app.post("/register", function (req, res) {
+  // A real world application would store the subscription info.
+  res.sendStatus(201);
+});
+
+app.post("/sendNotification", function (req, res) {
+  // in real world, you don't need client to trigger it but pick the subscription yourself from maybe a database
+  const subscription = req.body.subscription;
+  const payload = null;
+  const options = {
+    TTL: req.body.ttl,
+  };
+
+  setTimeout(function () {
+    webPush
+      .sendNotification(subscription, payload, options)
+      .then(function () {
+        res.sendStatus(201);
+      })
+      .catch(function (error) {
+        res.sendStatus(500);
+        console.log(error);
+      });
+  }, req.body.delay * 1000);
+});
+
 
 // 指定监听端口
 const port = 8000;

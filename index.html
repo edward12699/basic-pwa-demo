@@ -5,25 +5,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="manifest" href="manifest.json" />
+
   <title>PWA Demo</title>
 </head>
 
 <body>
   <h1>Hello PWAs!</h1>
+  <form>
+    Notification delay: <input id='notification-delay' type='number' value='5'></input> seconds
+    Notification Time-To-Live: <input id='notification-ttl' type='number' value='0'></input> seconds
+  </form>
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then(registration => {
-            console.log('Service Worker registered:', registration);
-          })
-          .catch(error => {
-            console.log('Service Worker registration failed:', error);
-          });
-      });
-    }
-  </script>
+  <button id="doIt">Try to conquer Italy!</button>
 </body>
+<script src="./index.js"></script>
 
 </html>
