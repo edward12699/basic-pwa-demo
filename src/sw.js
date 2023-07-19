@@ -6,7 +6,10 @@ import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { BackgroundSyncPlugin } from 'workbox-background-sync';
 
 // 使用 precaching 处理所有的 `index.html` 和所有的静态资源（例如 JavaScript, CSS）。
-precacheAndRoute(self.__WB_MANIFEST);
+//在构建过程中，Workbox 会替换 self.__WB_MANIFEST 为实际的预缓存清单数组，该数组包含了所有由 webpack 构建生成的资源的 URL 以及其对应的版本信息。
+// 但是仅限webpack 打包设计到的js， 不涉及public的代码
+let needCache = ["index.html", 'main1.js']
+precacheAndRoute(needCache.concat(self.__WB_MANIFEST));
 
 // 对 API 请求使用 NetworkFirst 策略，如果网络不可用，那么从缓存中获取。
 registerRoute(
